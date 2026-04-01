@@ -1,0 +1,3 @@
+[workspace]
+members  = ["contracts/kraal_lending_pool"]
+resolver = "2"

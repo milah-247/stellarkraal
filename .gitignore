@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Rust / Soroban
+target/
+*.wasm
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Next.js
+.next/
+out/
+
+# Build outputs
+dist/
+build/
+
+# Test coverage
+coverage/
+
+# Prisma dev migrations
+prisma/migrations/dev/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor
+.vscode/
+.idea/
+*.swp

@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Farmer {
+  id        String   @id @default(cuid())
+  address   String   @unique
+  name      String
+  region    String
+  createdAt DateTime @default(now())
+  animals   Animal[]
+  loans     Loan[]
+}
+
+model Animal {
+  id           String        @id @default(cuid())
+  assetId      String        @unique
+  species      AnimalSpecies
+  name         String
+  weightKg     Float
+  kraalId      String
+  verified     Boolean       @default(false)
+  deceased     Boolean       @default(false)
+  healthStatus HealthStatus  @default(HEALTHY)
+  farmerId     String
+  farmer       Farmer        @relation(fields: [farmerId], references: [id])
+  loans        Loan[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Loan {
+  id               String     @id @default(cuid())
+  loanId           BigInt     @unique
+  farmerId         String
+  farmer           Farmer     @relation(fields: [farmerId], references: [id])
+  animalId         String
+  animal           Animal     @relation(fields: [animalId], references: [id])
+  principal        BigInt
+  interestDue      BigInt
+  collateralValue  BigInt
+  ltvRatio         Int
+  startTimestamp   BigInt
+  dueTimestamp     BigInt
+  kraalId          String
+  status           LoanStatus @default(ACTIVE)
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+}
+
+model LenderPosition {
+  id        String   @id @default(cuid())
+  address   String   @unique
+  balance   BigInt   @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OraclePrice {
+  id        String   @id @default(cuid())
+  assetId   String   @unique
+  price     BigInt
+  updatedAt DateTime @updatedAt
+}
+
+enum AnimalSpecies {
+  CATTLE
+  GOAT
+  SHEEP
+}
+
+enum HealthStatus {
+  HEALTHY
+  SICK
+  CRITICAL
+  DECEASED
+}
+
+enum LoanStatus {
+  ACTIVE
+  REPAID
+  DEFAULTED
+  LIQUIDATED
+  GRACE_PERIOD
+}

@@ -1,0 +1,71 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-kraal}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-kraal_secret}
+      POSTGRES_DB: ${POSTGRES_DB:-stellarkraal}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-kraal}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-kraal}:${POSTGRES_PASSWORD:-kraal_secret}@postgres:5432/${POSTGRES_DB:-stellarkraal}
+      JWT_SECRET: ${JWT_SECRET}
+      PORT: 3001
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      STELLAR_NETWORK: ${STELLAR_NETWORK:-mainnet}
+      SOROBAN_RPC_URL: ${SOROBAN_RPC_URL}
+      CONTRACT_ID: ${CONTRACT_ID}
+    ports:
+      - '3001:3001'
+    command: >
+      sh -c "npx prisma migrate deploy && node dist/main"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001}
+      NEXT_PUBLIC_STELLAR_NETWORK: ${STELLAR_NETWORK:-mainnet}
+      NEXT_PUBLIC_CONTRACT_ID: ${CONTRACT_ID}
+    ports:
+      - '3000:3000'
+
+  oracle:
+    build:
+      context: ./oracle
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      API_URL: http://backend:3001
+      ORACLE_JWT: ${ORACLE_JWT}
+      POLL_INTERVAL_MS: ${ORACLE_POLL_INTERVAL_MS:-300000}
+    profiles:
+      - oracle
+
+volumes:
+  postgres_data:

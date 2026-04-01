@@ -1,0 +1,77 @@
+# StellarKraal — SEP-0001 Stellar.toml
+# Served at: https://stellarkraal.finance/.well-known/stellar.toml
+
+VERSION = "2.0.0"
+
+NETWORK_PASSPHRASE = "Public Global Stellar Network ; September 2015"
+
+ACCOUNTS = [
+  "GXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+]
+
+DOCUMENTATION = {
+  ORG_NAME                = "StellarKraal Protocol",
+  ORG_DBA                 = "StellarKraal",
+  ORG_URL                 = "https://stellarkraal.finance",
+  ORG_LOGO                = "https://stellarkraal.finance/logo.png",
+  ORG_DESCRIPTION         = "Decentralized livestock-backed micro lending protocol on Stellar. Tokenize cattle, goats and sheep as RWAs on Soroban and unlock USDC loans without a bank account.",
+  ORG_PHYSICAL_ADDRESS    = "Cape Town, South Africa",
+  ORG_PHONE_NUMBER        = "+27-000-000-0000",
+  ORG_KEYBASE             = "stellarkraal",
+  ORG_TWITTER             = "stellarkraal",
+  ORG_GITHUB              = "stellarkraal",
+  ORG_OFFICIAL_EMAIL      = "hello@stellarkraal.finance",
+  ORG_SUPPORT_EMAIL       = "support@stellarkraal.finance",
+  ORG_LICENSING_AUTHORITY = "Financial Sector Conduct Authority (FSCA), South Africa",
+  ORG_LICENSE_TYPE        = "Crypto Asset Service Provider (CASP)",
+  ORG_LICENSE_NUMBER      = "FSCA-CASP-XXXXXXX"
+}
+
+[[PRINCIPALS]]
+name          = "StellarKraal Core Team"
+email         = "core@stellarkraal.finance"
+github        = "stellarkraal"
+twitter       = "stellarkraal"
+id_photo_hash = ""
+verification_photo_hash = ""
+
+[[CURRENCIES]]
+code                = "KRAAL"
+issuer              = "GXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+display_decimals    = 7
+name                = "StellarKraal Governance Token"
+desc                = "Governance and fee-sharing token for the StellarKraal protocol."
+conditions          = "KRAAL tokens represent governance rights in the StellarKraal protocol. They do not constitute equity or debt."
+image               = "https://stellarkraal.finance/kraal-token.png"
+fixed_number        = 100000000
+is_asset_anchored   = false
+anchor_asset_type   = "other"
+attestation_of_reserve = "https://stellarkraal.finance/reserve-attestation.pdf"
+regulated           = false
+
+[[CURRENCIES]]
+code                = "USDC"
+issuer              = "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN"
+display_decimals    = 7
+name                = "USD Coin"
+desc                = "Circle USDC bridged to Stellar — used as the lending pool denomination."
+image               = "https://stellarkraal.finance/usdc.png"
+is_asset_anchored   = true
+anchor_asset        = "USD"
+anchor_asset_type   = "fiat"
+regulated           = false
+
+[[VALIDATORS]]
+ALIAS   = "stellarkraal-validator-1"
+DISPLAY_NAME = "StellarKraal Validator 1"
+HOST    = "validator1.stellarkraal.finance:11625"
+PUBLIC_KEY = "GXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+HISTORY = "https://history.stellarkraal.finance/prd/core-live/core_live_001/"
+
+[SOROBAN]
+CONTRACT_ID   = "CXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+CONTRACT_NAME = "KraalLendingPool"
+CONTRACT_DESC = "Livestock-backed USDC lending pool with RWA NFT collateral."
+WASM_HASH     = ""
+SOURCE_CODE   = "https://github.com/stellarkraal/stellarkraal/tree/main/contracts/kraal_lending_pool"
+AUDIT_REPORT  = "https://stellarkraal.finance/audit-report.pdf"
