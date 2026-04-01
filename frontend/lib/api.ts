@@ -126,6 +126,16 @@ export function useLenderPortfolio(address: string | null) {
   return useSWR<LenderPortfolio>(address ? `/lender/${address}/portfolio` : null, fetcher, swrDefaults);
 }
 
+export interface FarmerStats {
+  totalFarmers: number;
+  activeLoans: number;
+  tvl: string;
+}
+
+export function useFarmerStats() {
+  return useSWR<FarmerStats>('/farmers/stats', fetcher, swrDefaults);
+}
+
 export function useOracleStatus(assetId: string | null) {
   return useSWR<OracleStatus>(assetId ? `/oracle/status/${assetId}` : null, fetcher, {
     ...swrDefaults,
@@ -207,5 +217,26 @@ export async function login(address: string, signature: string, role: string) {
   return apiFetch<{ token: string }>('/auth/login', {
     method: 'POST',
     body: JSON.stringify({ address, signature, role }),
+  });
+}
+
+export async function setOracleHealth(assetId: string, healthStatus: string) {
+  return apiFetch('/oracle/health', {
+    method: 'POST',
+    body: JSON.stringify({ assetId, healthStatus }),
+  });
+}
+
+export async function registerAnimal(data: {
+  assetId: string;
+  species: 'CATTLE' | 'GOAT' | 'SHEEP';
+  name: string;
+  weightKg: number;
+  kraalId: string;
+  farmerId: string;
+}) {
+  return apiFetch<import('./api').Animal>('/animals/register', {
+    method: 'POST',
+    body: JSON.stringify(data),
   });
 }

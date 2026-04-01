@@ -29,4 +29,9 @@ export class FarmerController {
   animals(@Param('address') address: string) {
     return this.service.getAnimals(address);
   }
+
+  @Get('stats')
+  stats() {
+    return this.service.getStats();
+  }
 }

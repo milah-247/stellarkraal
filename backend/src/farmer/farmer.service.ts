@@ -27,4 +27,17 @@ export class FarmerService {
     const farmer = await this.findByAddress(address);
     return this.prisma.animal.findMany({ where: { farmerId: farmer.id } });
   }
+
+  async getStats() {
+    const [totalFarmers, activeLoans, tvlAgg] = await Promise.all([
+      this.prisma.farmer.count(),
+      this.prisma.loan.count({ where: { status: 'ACTIVE' } }),
+      this.prisma.loan.aggregate({ _sum: { collateralValue: true }, where: { status: 'ACTIVE' } }),
+    ]);
+    return {
+      totalFarmers,
+      activeLoans,
+      tvl: (tvlAgg._sum.collateralValue ?? BigInt(0)).toString(),
+    };
+  }
 }
